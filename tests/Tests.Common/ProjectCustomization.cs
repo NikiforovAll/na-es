@@ -9,9 +9,11 @@ public class ProjectCustomization : ICustomization
 {
     public void Customize(IFixture fixture)
     {
-        fixture.Customize<Project>(composer => composer
-                .Without(x => x.Created)
-                .Without(x => x.LastModified)
+        fixture.Customize<ToDoItem>(composer => composer
+            .FromFactory(() => new ToDoItem(Guid.NewGuid(), 0, Guid.Empty))
+            .With(x => x.ProjectNumber, () => 0)
+            .With(x => x.ProjectId, () => Guid.Empty)
+            .WithAutoProperties()
         );
     }
 }

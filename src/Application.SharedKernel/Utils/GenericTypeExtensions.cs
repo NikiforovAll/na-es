@@ -3,9 +3,6 @@
 
 namespace Nikiforovall.ES.Template.Application.SharedKernel.Utils;
 
-using System;
-using System.Linq;
-
 public static class GenericTypeExtensions
 {
     public static string GetGenericTypeName(this Type type)

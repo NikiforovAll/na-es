@@ -16,13 +16,9 @@ public class ProjectFaker : AutoFaker<Project>
         var colours = Colour.SupportedColours.ToList();
 
         this.CustomInstantiator(faker =>
-            new Project(this.FakerHub.Company.Random.Word(), faker.PickRandom(colours)));
+            new Project(Guid.NewGuid(), this.FakerHub.Company.Random.Word(), faker.PickRandom(colours)));
 
         this.RuleFor(faker => faker.Colour, faker => faker.PickRandom(colours));
-
-        this.Configure(builder => builder
-            .WithSkip<Project>(p => p.LastModified)
-            .WithSkip<Project>(p => p.LastModifiedBy));
 
         this.FinishWith((fake, project) =>
         {

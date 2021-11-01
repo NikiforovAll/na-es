@@ -51,7 +51,9 @@ Inspired by:
 
 ## TODO
 
-TODO: [] implement es
+TODO: [X] implement es
+TODO: [] Add Console seeding implementation
+TODO: [X] Add Marten.Console
 TODO: [] add github ci
 TODO: [] finish readme
 TODO: [] dockerize

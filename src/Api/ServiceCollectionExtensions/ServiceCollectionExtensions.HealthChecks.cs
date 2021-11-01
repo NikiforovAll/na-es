@@ -4,8 +4,6 @@
 namespace Nikiforovall.ES.Template.Api;
 
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Nikiforovall.ES.Template.Infrastructure.Persistence;
 
 internal static partial class ServiceCollectionExtensions
 {
@@ -20,11 +18,7 @@ internal static partial class ServiceCollectionExtensions
         // See https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks
 
         services
-            .AddHealthChecks()
-            .AddDbContextCheck<ApplicationDbContext>(
-                name: "Database",
-                failureStatus: HealthStatus.Degraded,
-                tags: new string[] { "services" });
+            .AddHealthChecks();
 
         return services;
     }

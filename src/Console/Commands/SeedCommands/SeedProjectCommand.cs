@@ -6,7 +6,6 @@ namespace Nikiforovall.ES.Template.Console.Commands.SeedCommands;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using Microsoft.Extensions.Logging;
-using Nikiforovall.ES.Template.Application.Interfaces;
 using Spectre.Console;
 
 public class SeedProjectCommand : Command
@@ -23,12 +22,10 @@ public class SeedProjectCommand : Command
 
     public class Run : ICommandHandler
     {
-        private readonly IApplicationDbContext context;
         private readonly ILogger<Run> logger;
 
-        public Run(IApplicationDbContext context, ILogger<Run> logger)
+        public Run(ILogger<Run> logger)
         {
-            this.context = context ?? throw new ArgumentNullException(nameof(context));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -47,8 +44,6 @@ public class SeedProjectCommand : Command
                     .Spinner(Spinner.Known.Material)
                     .Start("Inserting...", async ctx =>
                     {
-                        this.context.Projects.AddRange(projects);
-                        _ = await this.context.SaveChangesAsync(CancellationToken.None);
                     });
             }
 

@@ -3,7 +3,6 @@
 
 namespace Nikiforovall.ES.Template.Application.SharedKernel;
 
-using System;
 using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
 

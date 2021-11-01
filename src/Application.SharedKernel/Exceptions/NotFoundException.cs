@@ -3,8 +3,6 @@
 
 namespace Nikiforovall.ES.Template.Application.SharedKernel.Exceptions;
 
-using System;
-
 public class NotFoundException : Exception
 {
     public NotFoundException()

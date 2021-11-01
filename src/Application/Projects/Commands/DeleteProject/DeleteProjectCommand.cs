@@ -4,9 +4,7 @@
 namespace Nikiforovall.ES.Template.Application.Projects.Commands.DeleteProject;
 
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Nikiforovall.ES.Template.Application.Interfaces;
-using Nikiforovall.ES.Template.Application.SharedKernel.Exceptions;
+using Nikiforovall.ES.Template.Application.SharedKernel.Repositories;
 using Nikiforovall.ES.Template.Domain.ProjectAggregate;
 
 public class DeleteProjectCommand : IRequest
@@ -16,23 +14,17 @@ public class DeleteProjectCommand : IRequest
 
 public class DeleteProjectCommandHandler : IRequestHandler<DeleteProjectCommand>
 {
-    private readonly IApplicationDbContext context;
+    private readonly IRepository<Project> repository;
 
-    public DeleteProjectCommandHandler(IApplicationDbContext context) =>
-        this.context = context ?? throw new ArgumentNullException(nameof(context));
+    public DeleteProjectCommandHandler(IRepository<Project> repository) =>
+        this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
 
-    public async Task<Unit> Handle(DeleteProjectCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(
+        DeleteProjectCommand request,
+        CancellationToken cancellationToken)
     {
-        var entity = await this.context
-            .Projects
-            .Include(p => p.Items)
-            .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
-
-        _ = entity ?? throw new NotFoundException(nameof(Project), request.Id);
-
-        this.context.Projects.Remove(entity);
-
-        await this.context.SaveChangesAsync(cancellationToken);
+        var project = await this.repository.GetAsync(request.Id, cancellationToken);
+        await this.repository.DeleteAsync(project, cancellationToken);
 
         return Unit.Value;
     }

@@ -4,8 +4,7 @@
 namespace Nikiforovall.ES.Template.Application.Projects.Commands.UpdateProject;
 
 using MediatR;
-using Nikiforovall.ES.Template.Application.Interfaces;
-using Nikiforovall.ES.Template.Application.SharedKernel.Exceptions;
+using Nikiforovall.ES.Template.Application.SharedKernel.Repositories;
 using Nikiforovall.ES.Template.Domain.ProjectAggregate;
 
 public class UpdateProjectCommand : IRequest
@@ -15,25 +14,16 @@ public class UpdateProjectCommand : IRequest
     public string Name { get; set; } = default!;
 }
 
-public class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectCommand, Unit>
+public class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectCommand>
 {
-    private readonly IApplicationDbContext context;
+    private readonly IRepository<Project> repository;
 
-    public UpdateProjectCommandHandler(IApplicationDbContext context) =>
-        this.context = context ?? throw new ArgumentNullException(nameof(context));
+    public UpdateProjectCommandHandler(IRepository<Project> repository) =>
+        this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
 
-    public async Task<Unit> Handle(UpdateProjectCommand request, CancellationToken cancellationToken)
-    {
-        var entity = await this.context
-            .Projects
-            .FindAsync(new object[] { request.Id }, cancellationToken);
-
-        _ = entity ?? throw new NotFoundException(nameof(Project), request.Id);
-
-        entity.UpdateName(request.Name);
-
-        await this.context.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
-    }
+    public Task<Unit> Handle(
+        UpdateProjectCommand request, CancellationToken cancellationToken) =>
+            this.repository.GetAndUpdateAsync(request.Id,
+                project => project.UpdateName(request.Name),
+                cancellationToken);
 }

@@ -3,7 +3,6 @@
 
 namespace Nikiforovall.ES.Template.Api;
 
-using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;

@@ -3,12 +3,9 @@
 
 namespace Nikiforovall.ES.Template.Application.SharedKernel.Mappings;
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Microsoft.EntityFrameworkCore;
+using Marten;
 using Nikiforovall.ES.Template.Application.SharedKernel.Models;
 
 public static class MappingExtensions
@@ -17,7 +14,7 @@ public static class MappingExtensions
         this IQueryable<TDestination> queryable, int pageNumber, int pageSize) =>
             PaginatedList<TDestination>.CreateAsync(queryable, pageNumber, pageSize);
 
-    public static Task<List<TDestination>> ProjectToListAsync<TDestination>(
+    public static Task<IReadOnlyList<TDestination>> ProjectToListAsync<TDestination>(
         this IQueryable queryable, IConfigurationProvider configuration) =>
             queryable.ProjectTo<TDestination>(configuration).ToListAsync();
 }

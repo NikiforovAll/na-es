@@ -25,14 +25,14 @@ public class CreateProjectCommandTests
     [Theory, AutoData]
     public async Task ValidCommand_ProjectCreated(CreateProjectCommand command)
     {
-        var project = await SendAsync(command);
+        var id = await SendAsync(command);
 
-        var entity = await FindAsync<Project>(project.Id);
+        var entity = await FindAsync<Project>(id) ?? default!;
 
         entity.Should().NotBeNull();
         entity.Name.Should().Be(command.Name);
         entity.Status.Should().Be(ProjectStatus.Complete);
         entity.Items.Should().BeEmpty();
-        entity.Created.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(1));
+        entity.CreatedAt.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
     }
 }

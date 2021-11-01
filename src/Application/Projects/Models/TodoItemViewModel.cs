@@ -8,7 +8,7 @@ using Nikiforovall.ES.Template.Domain.ProjectAggregate;
 
 public class TodoItemViewModel : IMapFrom<ToDoItem>
 {
-    public int Id { get; set; }
+    public int ProjectNumber { get; set; }
 
     public string? Title { get; set; }
 

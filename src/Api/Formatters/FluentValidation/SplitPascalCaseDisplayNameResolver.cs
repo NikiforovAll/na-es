@@ -3,7 +3,6 @@
 
 namespace Nikiforovall.ES.Template.Api.Formatters.FluentValidation;
 
-using System;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;

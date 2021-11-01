@@ -5,39 +5,36 @@ namespace Nikiforovall.ES.Template.Application.Projects.Queries.GetProject;
 
 using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Nikiforovall.ES.Template.Application.Interfaces;
 using Nikiforovall.ES.Template.Application.Projects.Models;
-using Nikiforovall.ES.Template.Application.SharedKernel.Exceptions;
-using Nikiforovall.ES.Template.Application.SharedKernel.Utils;
-using Nikiforovall.ES.Template.Domain.ProjectAggregate.Specifications;
+using Nikiforovall.ES.Template.Application.SharedKernel.Repositories;
+using Nikiforovall.ES.Template.Domain.ProjectAggregate;
 
 public class GetProjectByIdQuery : IRequest<ProjectViewModel>
 {
     public Guid Id { get; set; }
 }
 
-public class GetProjectByIdQueryHandler : IRequestHandler<GetProjectByIdQuery, ProjectViewModel>
+public class GetProjectByIdQueryHandler
+    : IRequestHandler<GetProjectByIdQuery, ProjectViewModel>
 {
-    private readonly IApplicationDbContext context;
+    private readonly IRepository<Project> repository;
     private readonly IMapper mapper;
 
-    public GetProjectByIdQueryHandler(IApplicationDbContext context, IMapper mapper)
+    public GetProjectByIdQueryHandler(
+        IRepository<Project> repository,
+        IMapper mapper)
     {
-        this.context = context ?? throw new ArgumentNullException(nameof(context));
+        this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
         this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
-    public async Task<ProjectViewModel> Handle(GetProjectByIdQuery request, CancellationToken cancellationToken)
+
+    public async Task<ProjectViewModel> Handle(
+        GetProjectByIdQuery request,
+        CancellationToken cancellationToken)
     {
-        var spec = new ProjectByIdWithItemsSpecification(request.Id);
+        var entity = await this.repository.GetAsync(request.Id, cancellationToken);
+        var project = this.mapper.Map<ProjectViewModel>(entity);
 
-        var project = await this.context.Projects
-            .ApplySpecification(spec)
-            .AsNoTracking()
-            .FirstOrDefaultAsync(cancellationToken);
-
-        _ = project ?? throw new NotFoundException(nameof(Projects), request.Id);
-
-        return this.mapper.Map<ProjectViewModel>(project);
+        return project;
     }
 }

@@ -14,7 +14,6 @@ public class ToDoItemFaker : AutoFaker<ToDoItem>
         this.RuleFor(faker => faker.Title, faker => faker.Name.JobTitle());
 
         this.Configure(builder => builder
-            .WithSkip<ToDoItem>(t => t.Id)
-            .WithSkip<ToDoItem>(t => t.DomainEvents));
+            .WithSkip<ToDoItem>(t => t.ProjectNumber));
     }
 }
