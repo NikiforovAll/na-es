@@ -10,7 +10,7 @@
 * [XUnit](https://xunit.net/)
 * [FluentAssertions](https://fluentassertions.com/)
 * [Moq](https://github.com/moq)
-* [AutoFixture](https://github.com/AutoFixture/AutoFixture), 
+* [AutoFixture](https://github.com/AutoFixture/AutoFixture)
 * [Respawn](https://github.com/jbogard/Respawn)
 * [Docker](https://www.docker.com/)
 
