@@ -21,4 +21,4 @@ jobs:
     - name: Build
       run: dotnet build --no-restore ./NikiforovAll.EventSourcing.Template.sln
     - name: Test
-      run: dotnet test --no-build --verbosity normal ./NikiforovAll.CleanArchitecture.Template.sln --filter Category!=Integration
+      run: dotnet test --no-build --verbosity normal ./NikiforovAll.EventSourcing.Template.sln --filter Category!=Integration
