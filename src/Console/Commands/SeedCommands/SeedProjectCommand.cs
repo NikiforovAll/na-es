@@ -5,13 +5,14 @@ namespace Nikiforovall.ES.Template.Console.Commands.SeedCommands;
 
 using System.CommandLine;
 using System.CommandLine.Invocation;
+using Marten;
 using Microsoft.Extensions.Logging;
 using Spectre.Console;
 
 public class SeedProjectCommand : Command
 {
     public SeedProjectCommand()
-        : base(name: "seed-projects", "Seeds projects into database.")
+        : base(name: "seed-projects", "Seeds projects into database as documents.")
     {
         this.AddOption(new Option<bool>("--dry-run", "Skip insertion into the database"));
         this.AddOption(new Option<int>(
@@ -24,9 +25,12 @@ public class SeedProjectCommand : Command
     {
         private readonly ILogger<Run> logger;
 
-        public Run(ILogger<Run> logger)
+        private readonly IDocumentStore db;
+
+        public Run(ILogger<Run> logger, IDocumentStore db)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.db = db;
         }
 
         public bool DryRun { get; set; }
@@ -40,11 +44,9 @@ public class SeedProjectCommand : Command
 
             if (!this.DryRun)
             {
-                await AnsiConsole.Status()
+                AnsiConsole.Status()
                     .Spinner(Spinner.Known.Material)
-                    .Start("Inserting...", async ctx =>
-                    {
-                    });
+                    .Start("Inserting...", ctx => this.db.BulkInsert(projects, batchSize: 500));
             }
 
             this.logger.LogInformation("Done!");
