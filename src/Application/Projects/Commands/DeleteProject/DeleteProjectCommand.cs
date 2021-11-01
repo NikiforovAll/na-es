@@ -24,6 +24,7 @@ public class DeleteProjectCommandHandler : IRequestHandler<DeleteProjectCommand>
         CancellationToken cancellationToken)
     {
         var project = await this.repository.GetAsync(request.Id, cancellationToken);
+        project.Archieve();
         await this.repository.DeleteAsync(project, cancellationToken);
 
         return Unit.Value;

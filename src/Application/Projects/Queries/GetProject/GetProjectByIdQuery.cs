@@ -6,6 +6,7 @@ namespace Nikiforovall.ES.Template.Application.Projects.Queries.GetProject;
 using AutoMapper;
 using MediatR;
 using Nikiforovall.ES.Template.Application.Projects.Models;
+using Nikiforovall.ES.Template.Application.SharedKernel.Exceptions;
 using Nikiforovall.ES.Template.Application.SharedKernel.Repositories;
 using Nikiforovall.ES.Template.Domain.ProjectAggregate;
 
@@ -17,14 +18,14 @@ public class GetProjectByIdQuery : IRequest<ProjectViewModel>
 public class GetProjectByIdQueryHandler
     : IRequestHandler<GetProjectByIdQuery, ProjectViewModel>
 {
-    private readonly IRepository<Project> repository;
+    private readonly IDocumentStore repository;
     private readonly IMapper mapper;
 
     public GetProjectByIdQueryHandler(
-        IRepository<Project> repository,
+        IDocumentStore store,
         IMapper mapper)
     {
-        this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        this.repository = store ?? throw new ArgumentNullException(nameof(store));
         this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
@@ -32,7 +33,9 @@ public class GetProjectByIdQueryHandler
         GetProjectByIdQuery request,
         CancellationToken cancellationToken)
     {
-        var entity = await this.repository.GetAsync(request.Id, cancellationToken);
+        var entity = await this.repository.LoadAsync<Project>(request.Id, cancellationToken);
+
+        _ = entity ?? throw new NotFoundException(nameof(Project), request.Id);
         var project = this.mapper.Map<ProjectViewModel>(entity);
 
         return project;

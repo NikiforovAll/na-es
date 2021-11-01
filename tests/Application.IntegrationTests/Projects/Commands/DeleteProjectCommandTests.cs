@@ -5,6 +5,8 @@ namespace Nikiforovall.ES.Template.Application.IntegrationTests.Projects.Command
 
 using Nikiforovall.ES.Template.Application.Projects.Commands.CreateProject;
 using Nikiforovall.ES.Template.Application.Projects.Commands.DeleteProject;
+using Nikiforovall.ES.Template.Application.Projects.Queries.GetProject;
+using Nikiforovall.ES.Template.Application.SharedKernel.Exceptions;
 using Nikiforovall.ES.Template.Domain.ProjectAggregate;
 using Nikiforovall.ES.Template.Domain.SharedKernel.Exceptions;
 using Nikiforovall.ES.Template.Tests.Common;
@@ -22,16 +24,34 @@ public class DeleteProjectCommandTests : IntegrationTestBase
     }
 
     [Theory, AutoData]
-    public async Task ProjectExists_Deleted(CreateProjectCommand command)
+    public async Task ProjectExists_DeletedFromDocumentsByNotFromEventSource(CreateProjectCommand command)
     {
         var projectId = await SendAsync(command);
 
         await SendAsync(new DeleteProjectCommand { Id = projectId });
 
-        var entity = await FindAsync<Project>(projectId);
+        var entity = await ExecuteDocumentStoreAsync(async db =>
+        {
+            using var session = db.LightweightSession();
+            return await session.LoadAsync<Project>(projectId);
+        });
 
-        // TODO: project is not really deleted in ES version, implement soft delete
-        //entity.Should().BeNull();
+        entity.Should().BeNull();
+
+        var esEntity = await FindAsync<Project>(projectId);
+
+        esEntity.Should().NotBeNull();
+    }
+
+    [Theory, AutoData]
+    public async Task ProjectExists_RetrieveByGetProjectByIdQuery_NotFound(CreateProjectCommand command)
+    {
+        var projectId = await SendAsync(command);
+
+        await SendAsync(new DeleteProjectCommand { Id = projectId });
+
+        await FluentActions.Invoking(() => SendAsync(new GetProjectByIdQuery { Id = projectId }))
+            .Should().ThrowAsync<NotFoundException>();
     }
 
     [Theory, AutoProjectData]
@@ -43,7 +63,12 @@ public class DeleteProjectCommandTests : IntegrationTestBase
 
         await SendAsync(new DeleteProjectCommand { Id = project.Id });
 
-        // TODO: project is not really deleted in ES version, implement soft delete
-        //entity.Should().BeNull();
+        var entity = await ExecuteDocumentStoreAsync(async db =>
+        {
+            using var session = db.LightweightSession();
+            return await session.LoadAsync<ToDoItem>(toDoItem.Id);
+        });
+
+        entity.Should().NotBeNull();
     }
 }

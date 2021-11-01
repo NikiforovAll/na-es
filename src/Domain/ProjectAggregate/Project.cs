@@ -129,4 +129,11 @@ public class Project : Aggregate
 
         this.Items.FirstOrDefault(i => i.ProjectNumber == @event.ItemId)?.MarkComplete();
     }
+
+    public void Archieve()
+    {
+        var @event = ProjectArchieved.Create(this.Id, DateTime.UtcNow);
+
+        this.Enqueue(@event);
+    }
 }

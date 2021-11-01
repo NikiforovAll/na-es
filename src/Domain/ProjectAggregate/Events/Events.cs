@@ -85,5 +85,20 @@ public static class Events
                 ProjectId = projectId,
             };
         }
+
+        public record ProjectArchieved : IEvent
+        {
+            public Guid ProjectId { get; set; }
+
+            public DateTime DeletedAt { get; set; }
+
+            private ProjectArchieved() { }
+
+            public static ProjectArchieved Create(Guid projectId, DateTime deletedAt) => new()
+            {
+                ProjectId = projectId,
+                DeletedAt = deletedAt,
+            };
+        }
     }
 }

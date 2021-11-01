@@ -6,6 +6,7 @@ namespace Nikiforovall.ES.Template.Infrastructure.Persistence;
 using Marten;
 using Marten.Events.Projections;
 using Nikiforovall.ES.Template.Domain.ProjectAggregate;
+using Nikiforovall.ES.Template.Infrastructure.Persistence.Projections;
 
 public class MartenApplicationRegistry : MartenRegistry
 {
@@ -19,5 +20,6 @@ public class MartenApplicationRegistry : MartenRegistry
     {
         options.Projections.SelfAggregate<Project>();
         options.Projections.Add<ToDoItemProjection>(ProjectionLifecycle.Async);
+        options.Projections.Add<ProjectArchivedProjection>(ProjectionLifecycle.Async);
     }
 }

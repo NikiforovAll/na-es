@@ -17,6 +17,7 @@ using Nikiforovall.ES.Template.Domain.ProjectAggregate;
 using Nikiforovall.ES.Template.Domain.SharedKernel.Aggregates;
 using Nikiforovall.ES.Template.Infrastructure;
 using Nikiforovall.ES.Template.Infrastructure.Persistence;
+using Nikiforovall.ES.Template.Infrastructure.Persistence.Projections;
 using Npgsql;
 using Respawn;
 using IDocumentStore = Marten.IDocumentStore;
@@ -51,6 +52,7 @@ public class SliceFixture
             {
                 options.Projections.SelfAggregate<Project>();
                 options.Projections.Add<ToDoItemProjection>(ProjectionLifecycle.Inline);
+                options.Projections.Add<ProjectArchivedProjection>(ProjectionLifecycle.Inline);
             });
 
         var provider = services.BuildServiceProvider();

@@ -4,8 +4,8 @@
 namespace Nikiforovall.ES.Template.Application.IntegrationTests.Projects.Queries;
 
 using Nikiforovall.ES.Template.Application.Projects.Queries.GetProject;
+using Nikiforovall.ES.Template.Application.SharedKernel.Exceptions;
 using Nikiforovall.ES.Template.Domain.ProjectAggregate;
-using Nikiforovall.ES.Template.Domain.SharedKernel.Exceptions;
 using Nikiforovall.ES.Template.Tests.Common;
 
 [Trait("Category", "Integration")]
@@ -14,7 +14,7 @@ public class GetProjectByIdQueryTests : IntegrationTestBase
     [Theory, AutoData]
     public void ProjectDoesNotExist_ExceptionThrow(GetProjectByIdQuery query) =>
         FluentActions.Invoking(() =>
-            SendAsync(query)).Should().ThrowAsync<AggregateNotFoundException>();
+            SendAsync(query)).Should().ThrowAsync<NotFoundException>();
 
     [Theory, AutoProjectData]
     public async Task ExistingProjectWithToDoItems_Retrieved(Project project, IList<ToDoItem> items)
