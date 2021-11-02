@@ -6,7 +6,7 @@ namespace NikiforovAll.ES.Template.Worker.Consumers.MarkToDoItemCompleteConsumer
 using MassTransit;
 using MediatR;
 using NikiforovAll.ES.Template.Application.Projects.Commands.MarkComplete;
-using NikiforovAll.ES.Template.Worker.Contracts;
+using NikiforovAll.ES.Template.Messaging.Contracts;
 
 public class MarkToDoItemCompleteConsumer : IConsumer<IMarkToDoItemComplete>
 {
