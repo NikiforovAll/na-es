@@ -3,7 +3,7 @@
 
 namespace NikiforovAll.ES.Template.Messaging.Contracts;
 
-public interface IMarkToDoItemComplete
+public interface MarkToDoItemComplete
 {
     public Guid ProjectId { get; }
 

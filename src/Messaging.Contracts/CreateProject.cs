@@ -3,7 +3,7 @@
 
 namespace NikiforovAll.ES.Template.Messaging.Contracts;
 
-public interface ICreateProject
+public interface CreateProject
 {
     public string Name { get; }
 
