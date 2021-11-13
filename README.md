@@ -56,6 +56,7 @@ This project is licensed with the [Apache License](LICENSE).
 Inspired by:
 
 * <https://github.com/oskardudycz/EventSourcing.NetCore>
+* <https://cqrs.files.wordpress.com/2010/11/cqrs_documents.pdf>
 * <https://github.com/JasonTaylorDev/CleanArchitecture>
 * <https://github.com/ardalis/cleanarchitecture>
 * <https://github.com/dotnet-architecture/eShopOnContainers>
